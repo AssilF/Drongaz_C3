@@ -1,4 +1,4 @@
-#include "core/flight_core.h"
+
 #include <Arduino.h>
 #include <array>
 
@@ -38,3 +38,9 @@ void loop() {
   flightCore.update(0.01f);
   delay(10);
 }
+
+FlightCore flightCore;
+
+void setup() { flightCore.init(); }
+
+void loop() { flightCore.update(); }
