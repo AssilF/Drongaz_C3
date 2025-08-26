@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "platforms": [
+    {
+      "id": "drongaz",
+      "ports": [
+        "Imu",
+        "Esc",
+        "Radio",
+        "TelemetryOut",
+        "Store",
+        "Clock"
+      ],
+      "power_tiers": [
+        "11V",
+        "16V"
+      ],
+      "notes": "Hex-arch flight controller"
+    }
+  ],
+  "components": [
+    {
+      "id": "mpu6050",
+      "type": "sensor",
+      "port": "Imu"
+    },
+    {
+      "id": "ledc_esc",
+      "type": "actuator",
+      "port": "Esc"
+    },
+    {
+      "id": "espnow",
+      "type": "radio",
+      "port": "Radio"
+    },
+    {
+      "id": "serial_tcp",
+      "type": "telemetry",
+      "port": "TelemetryOut"
+    }
+  ],
+  "adapters": [
+    {
+      "from": "mpu6050",
+      "to_port": "Imu",
+      "impl": "Mpu6050Imu"
+    },
+    {
+      "from": "ledc_esc",
+      "to_port": "Esc",
+      "impl": "LedcEsc"
+    },
+    {
+      "from": "espnow",
+      "to_port": "Radio",
+      "impl": "EspNowRadio"
+    },
+    {
+      "from": "serial_tcp",
+      "to_port": "TelemetryOut",
+      "impl": "SerialTcpTelemetry"
+    }
+  ],
+  "auto_rules": [
+    {
+      "if": [
+        "platform:drongaz",
+        "component:mpu6050"
+      ],
+      "then_add": [
+        "adapter:Mpu6050Imu"
+      ]
+    },
+    {
+      "if": [
+        "platform:drongaz",
+        "component:ledc_esc"
+      ],
+      "then_add": [
+        "adapter:LedcEsc"
+      ]
+    }
+  ]
+}
