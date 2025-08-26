@@ -1,18 +1,8 @@
+#include "core/FlightCore.h"
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+FlightCore flightCore;
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
-}
+void setup() { flightCore.init(); }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
+void loop() { flightCore.update(); }

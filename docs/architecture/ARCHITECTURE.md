@@ -12,12 +12,12 @@ Hexagonal Architecture (Ports & Adapters). Keep **Core** pure and deterministic.
 
 ## Directory Map
 ```
-/include/        # public headers
-/src/core/       # core logic (no IO)
-/src/ports/      # pure abstract interfaces
-/src/hal/        # adapters implementing ports
-/src/mw/         # RTOS tasks, pairing, schedulers
-/src/app/        # binaries/main entrypoints
+/include/        # project-level public headers
+/lib/drongaz/src/core/  # core logic (no IO)
+/lib/drongaz/src/ports/ # pure abstract interfaces
+/lib/drongaz/src/hal/   # adapters implementing ports
+/lib/drongaz/src/mw/    # RTOS tasks, pairing, schedulers
+/src/main.cpp           # firmware entry point
 /telemetry/      # protocol schemas + host tools
 /tests/          # unit & HIL tests
 /docs/           # architecture docs, diagrams
@@ -32,7 +32,7 @@ Hexagonal Architecture (Ports & Adapters). Keep **Core** pure and deterministic.
 5. Control loops are allocation-free in hot paths; bounded timing.
 
 ## Ports: Snapshot
-(See `/src/ports` — this snapshot may lag behind the code.)
+(See `lib/drongaz/src/ports` — this snapshot may lag behind the code.)
 
 - `IEsc`: arm/disarm/write/read (rpm/current)  
 - `IImu`: begin/read (ax..gz,timestamp)  
