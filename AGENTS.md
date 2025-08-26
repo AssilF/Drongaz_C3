@@ -62,7 +62,7 @@ task:
   id: DRZ-####            # e.g., GitHub issue number or short slug
   intent: ""              # short goal, e.g., "Add Mpu6050Imu adapter"
   context:                # links to code, specs, logs
-    - path: src/ports/IImu.h
+    - path: src/ports/i_imu.h
     - path: src/hal/Mpu6050Imu.cpp
   acceptance_criteria:
     - "Unit tests green"
@@ -228,41 +228,55 @@ task:
 > **Source of truth is `/src/ports/`.** This snapshot helps reviewers spot drift.
 
 ```cpp
-// /src/ports/IEsc.h
-struct EscCommand { float throttle01; }; // 0..1
-struct EscFeedback { float rpm; float currentA; };
+// /src/ports/i_esc.h
 struct IEsc {
   virtual ~IEsc() = default;
-  virtual void arm() = 0;
+  virtual bool arm() = 0;
   virtual void disarm() = 0;
-  virtual void write(const EscCommand&) = 0;
-  virtual EscFeedback read() const = 0;
+  virtual void write(float duty) = 0;
 };
 
-// /src/ports/IImu.h
-struct ImuSample { float ax, ay, az, gx, gy, gz; uint64_t t_us; };
+// /src/ports/i_imu.h
+struct ImuSample {
+  float ax, ay, az;
+  float gx, gy, gz;
+};
 struct IImu {
   virtual ~IImu() = default;
-  virtual bool begin() = 0;
-  virtual bool read(ImuSample& out) = 0;
+  virtual void begin() = 0;
+  virtual ImuSample read() = 0;
 };
 
-// /src/ports/IRadio.h
-struct RcFrame { float thrust, biasFB, biasLR, yaw; uint64_t t_us; };
+// /src/ports/i_radio.h
+struct RcFrame {
+  float thrust;
+  float biasFb;
+  float biasLr;
+  float yaw;
+};
 struct IRadio {
   virtual ~IRadio() = default;
-  virtual bool read(RcFrame& out) = 0;
+  virtual RcFrame read() = 0;
 };
 
-// /src/ports/ITelemetryOut.h
-struct TelemetryFrame { float pitch, roll, yaw, battV; /* ... */ };
+// /src/ports/i_telemetry_out.h
+struct TelemetryFrame {
+  float pitch;
+  float roll;
+  float yaw;
+  float battV;
+};
 struct ITelemetryOut {
   virtual ~ITelemetryOut() = default;
-  virtual void write(const TelemetryFrame&) = 0;
+  virtual void write(const TelemetryFrame &frame) = 0;
 };
 
-// /src/ports/IStore.h
-struct IStore { virtual ~IStore()=default; virtual bool put(const char* k, const void*, size_t)=0; virtual bool get(const char* k, void*, size_t)=0; };
+// /src/ports/i_store.h
+struct IStore {
+  virtual ~IStore() = default;
+  virtual bool put(const char *key, const void *data, size_t len) = 0;
+  virtual bool get(const char *key, void *data, size_t len) = 0;
+};
 ```
 ---
 
